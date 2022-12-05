@@ -25,6 +25,7 @@ import lists from './lists/reducer'
 import mintV2 from './mint/proamm/reducer'
 import mint from './mint/reducer'
 import multicall from './multicall/reducer'
+import myEarnings from './myEarnings/reducer'
 import pair from './pair/reducer'
 import pools from './pools/reducer'
 import swap from './swap/reducer'
@@ -65,6 +66,7 @@ const store = configureStore({
     campaigns,
     tutorial,
     bridge,
+    myEarnings,
     customizeDexes,
     elasticFarm,
     elasticFarmV2,
