@@ -71,7 +71,7 @@ const useGetRoute = (args: Args) => {
       }
     })
 
-    const url = `${aggregatorDomain}/${NETWORKS_INFO[chainId].aggregatorRoute}/api/v1/routes`
+    const url = `https://aggregator-api.kyberswap.com/${NETWORKS_INFO[chainId].aggregatorRoute}/api/v1/routes`
 
     currentRequestRef.current = trigger({
       url,

@@ -57,7 +57,7 @@ const useBuildRoute = (args: Args) => {
       abortControllerRef.current.abort()
       abortControllerRef.current = new AbortController()
 
-      const url = `${aggregatorDomain}/${NETWORKS_INFO[chainId].aggregatorRoute}/api/v1/route/build`
+      const url = `https://aggregator-api.kyberswap.com/${NETWORKS_INFO[chainId].aggregatorRoute}/api/v1/route/build`
       const response = await buildRoute(url, payload, abortControllerRef.current.signal)
 
       return {
