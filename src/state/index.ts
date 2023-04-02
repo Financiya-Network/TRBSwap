@@ -7,6 +7,7 @@ import { ENV_LEVEL } from 'constants/env'
 import { ENV_TYPE } from 'constants/type'
 
 import annoucementApi from '../services/announcement'
+import earningApi from '../services/earning'
 import geckoTerminalApi from '../services/geckoTermial'
 import ksSettingApi from '../services/ksSetting'
 import notificationApi from '../services/notification'
@@ -73,6 +74,7 @@ const store = configureStore({
     tokenPrices,
     topTokens,
     [routeApi.reducerPath]: routeApi.reducer,
+    [earningApi.reducerPath]: earningApi.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({ thunk: true, immutableCheck: false, serializableCheck: false })
@@ -82,7 +84,8 @@ const store = configureStore({
       .concat(ksSettingApi.middleware)
       .concat(annoucementApi.middleware)
       .concat(priceAlertApi.middleware)
-      .concat(routeApi.middleware),
+      .concat(routeApi.middleware)
+      .concat(earningApi.middleware),
   preloadedState: load({ states: PERSISTED_KEYS }),
 })
 

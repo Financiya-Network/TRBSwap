@@ -1,22 +1,12 @@
 import { t } from '@lingui/macro'
 import { Flex } from 'rebass'
-import {
-  Bar,
-  BarChart,
-  LabelList,
-  Legend as RechartsLegend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+import { Area, AreaChart, Legend as RechartsLegend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import useTheme from 'hooks/useTheme'
 import { EarningStatsAtTime } from 'types/myEarnings'
 
 import Legend from './Legend'
 import TooltipContent from './TooltipContent'
-import { formatUSDValue } from './utilts'
 
 type Props = {
   data: EarningStatsAtTime[]
@@ -39,7 +29,7 @@ export const displayConfig: DisplayConfig = {
   },
   farm: {
     legend: t`Farm Rewards`,
-    color: '#1abc9c',
+    color: '#1abc7c',
   },
 }
 
@@ -79,7 +69,7 @@ const EarningBarChart: React.FC<Props> = ({ data }) => {
 
   return (
     <ResponsiveContainer>
-      <BarChart
+      <AreaChart
         width={500}
         height={300}
         data={data}
@@ -87,23 +77,18 @@ const EarningBarChart: React.FC<Props> = ({ data }) => {
           top: 20,
         }}
       >
+        <defs>
+          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={theme.primary} stopOpacity={0.4} />
+            <stop offset="100%" stopColor={theme.primary} stopOpacity={0} />
+          </linearGradient>
+        </defs>
         <XAxis dataKey="date" fontSize="12px" axisLine={false} tickLine={false} stroke={theme.subText} />
         <YAxis fontSize="12px" axisLine={false} tickLine={false} stroke={theme.subText} />
-        <Tooltip content={renderTooltip} cursor={false} />
+        <Tooltip content={renderTooltip} cursor={true} />
         <RechartsLegend content={renderLegend} />
-        <Bar dataKey="pool.totalValue" stackId="a" fill={displayConfig.pool.color} />
-        <Bar dataKey="farm.totalValue" stackId="a" fill={displayConfig.farm.color}>
-          <LabelList
-            dataKey="total"
-            position="top"
-            fill={theme.subText}
-            color={theme.subText}
-            fontSize="14px"
-            fontWeight={500}
-            formatter={(value: number) => formatUSDValue(value)}
-          />
-        </Bar>
-      </BarChart>
+        <Area type="monotone" dataKey="farm.totalValue" stroke={theme.primary} fill="url(#colorUv)" strokeWidth={2} />
+      </AreaChart>
     </ResponsiveContainer>
   )
 }

@@ -7,16 +7,16 @@ import useTheme from 'hooks/useTheme'
 import { EarningStatsAtTime } from 'types/myEarnings'
 import { formattedNumLong } from 'utils'
 
-import { displayConfig } from '.'
 import { formatUSDValue } from './utilts'
 
 const TokensWrapper = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
 
   align-items: center;
-  gap: 4px 8px;
+  gap: 8px 4px;
   color: ${({ theme }) => theme.subText};
+  font-weight: 500;
 `
 const StyledLogo = styled.img`
   width: 16px;
@@ -77,8 +77,8 @@ const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
       width="200px"
       flexDirection="column"
       sx={{
-        gap: '12px',
-        background: theme.tableHeader,
+        gap: '8px',
+        background: theme.buttonBlack,
         borderRadius: '4px',
         border: `1px solid ${darken(0.2, theme.border)}`,
       }}
@@ -86,21 +86,47 @@ const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
       <Text
         as="span"
         sx={{
-          fontWeight: 500,
-          fontSize: '14px',
-          lineHeight: '16px',
+          fontSize: '10px',
           color: theme.subText,
         }}
       >
-        <Trans>Total Earnings:</Trans>{' '}
-        <Text
-          as="span"
-          sx={{
-            color: theme.text,
-          }}
-        >
-          {formatUSDValue(dataEntry.pool.totalValue + dataEntry.farm.totalValue)}
-        </Text>
+        {dataEntry.date}
+      </Text>
+      <Text
+        as="span"
+        sx={{
+          fontWeight: 500,
+          fontSize: '14px',
+          lineHeight: '16px',
+          color: theme.text,
+        }}
+      >
+        <Trans>My Total Earnings</Trans>:{' '}
+        <span>{formatUSDValue(dataEntry.pool.totalValue + dataEntry.farm.totalValue)}</span>
+      </Text>
+
+      <Text
+        as="span"
+        sx={{
+          fontWeight: 500,
+          fontSize: '14px',
+          lineHeight: '16px',
+          color: theme.blue,
+        }}
+      >
+        <Trans>Pool Rewards</Trans>: <span>{formatUSDValue(dataEntry.pool.totalValue)}</span>
+      </Text>
+
+      <Text
+        as="span"
+        sx={{
+          fontWeight: 500,
+          fontSize: '14px',
+          lineHeight: '16px',
+          color: theme.primary,
+        }}
+      >
+        <Trans>Farm Rewards</Trans>: <span>{formatUSDValue(dataEntry.farm.totalValue)}</span>
       </Text>
 
       <Flex
@@ -111,45 +137,7 @@ const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
         }}
       />
 
-      <Flex
-        flexDirection="column"
-        sx={{
-          gap: '4px',
-        }}
-      >
-        <Text
-          as="span"
-          sx={{
-            fontSize: '14px',
-            lineHeight: '16px',
-            color: displayConfig.farm.color,
-          }}
-        >
-          <Trans>Farm Rewards:</Trans> <b>{formatUSDValue(dataEntry.farm.totalValue)}</b>
-        </Text>
-
-        <Tokens tokens={dataEntry.farm.tokens} />
-      </Flex>
-
-      <Flex
-        flexDirection="column"
-        sx={{
-          gap: '4px',
-        }}
-      >
-        <Text
-          as="span"
-          sx={{
-            fontSize: '14px',
-            lineHeight: '16px',
-            color: displayConfig.pool.color,
-          }}
-        >
-          <Trans>Pool Rewards:</Trans> <b>{formatUSDValue(dataEntry.pool.totalValue)}</b>
-        </Text>
-
-        <Tokens tokens={dataEntry.pool.tokens} />
-      </Flex>
+      <Tokens tokens={dataEntry.farm.tokens} />
     </Flex>
   )
 }
