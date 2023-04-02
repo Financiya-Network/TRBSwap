@@ -189,7 +189,6 @@ export const DEFAULT_REWARDS: { [key: string]: string[] } = {
 
 export const SUPPORTED_NETWORKS_FOR_MY_EARNINGS = [
   ChainId.MAINNET,
-  ChainId.ETHW,
   ChainId.MATIC,
   ChainId.BSCMAINNET,
   ChainId.AVAXMAINNET,

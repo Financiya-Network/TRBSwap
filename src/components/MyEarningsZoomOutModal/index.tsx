@@ -4,7 +4,7 @@ import Modal from 'components/Modal'
 import useGetEarningsOverTime from 'hooks/myEarnings/useGetEarningsOverTime'
 import EarningsPanel from 'pages/MyEarnings/MyEarningsOverTimePanel'
 import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useToggleEthPowAckModal } from 'state/application/hooks'
+import { useModalOpen, useToggleMyEarningsZoomOutModal } from 'state/application/hooks'
 
 const Panel = styled(EarningsPanel)`
   border: none;
@@ -12,7 +12,7 @@ const Panel = styled(EarningsPanel)`
 
 const MyEarningsZoomOutModal = () => {
   const isModalOpen = useModalOpen(ApplicationModal.MY_EARNINGS_ZOOM_OUT)
-  const toggleOpenThisModal = useToggleEthPowAckModal()
+  const toggleOpenThisModal = useToggleMyEarningsZoomOutModal()
   const earningsOverTimeState = useGetEarningsOverTime()
 
   return (
