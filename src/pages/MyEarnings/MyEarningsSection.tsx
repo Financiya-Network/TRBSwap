@@ -1,4 +1,3 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { Flex } from 'rebass'
@@ -7,6 +6,7 @@ import { TokenEarning, useGetEarningDataQuery } from 'services/earning'
 import MyEarningsZoomOutModal from 'components/MyEarningsZoomOutModal'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
+import { useAppSelector } from 'state/hooks'
 import { EarningStatsOverTime, EarningStatsTick, EarningsBreakdown } from 'types/myEarnings'
 import { isAddress } from 'utils'
 
@@ -17,18 +17,16 @@ const sumTokenEarnings = (earnings: TokenEarning[]) => {
   return earnings.reduce((sum, tokenEarning) => sum + Number(tokenEarning.amountUSD), 0)
 }
 
-const MyEarningsSection = () => {
-  const { chainId, account } = useActiveWeb3React()
+const MyEarningsSection: React.FC = () => {
+  const { chainId, account = '' } = useActiveWeb3React()
 
-  const getEarningData = useGetEarningDataQuery({
-    account: account || '',
-    chainIds: [ChainId.MAINNET],
-  })
+  const selectedChainIds = useAppSelector(state => state.myEarnings.selectedChains)
+  const getEarningData = useGetEarningDataQuery({ account, chainIds: selectedChainIds })
   const allTokens = useAllTokens()
 
   const earningBreakdown: EarningsBreakdown | undefined = useMemo(() => {
     const data = getEarningData?.data?.['ethereum']?.account
-    console.log({ data })
+
     const latestData = data?.[0].total
       ?.filter(tokenData => {
         const tokenAddress = isAddress(chainId, tokenData.token)

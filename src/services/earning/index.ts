@@ -77,7 +77,7 @@ const earningApi = createApi({
       query: ({ account, chainIds }) => ({
         url: `/all-chain/api/v1/portfolio`,
         params: {
-          account: '0x20eadfcaf91bd98674ff8fc341d148e1731576a4' || account,
+          account,
           chainNames: chainIds.map(chainId => NETWORKS_INFO[chainId].aggregatorRoute),
         },
       }),
