@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { darken } from 'polished'
+import { darken, rgba } from 'polished'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
+import Logo from 'components/Logo'
 import useTheme from 'hooks/useTheme'
 import { EarningStatsAtTime } from 'types/myEarnings'
 import { formattedNumLong } from 'utils'
@@ -11,16 +12,11 @@ import { formatUSDValue } from './utilts'
 
 const TokensWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-
   align-items: center;
-  gap: 8px 4px;
+  flex-wrap: wrap;
+  gap: 8px 16px;
   color: ${({ theme }) => theme.subText};
   font-weight: 500;
-`
-const StyledLogo = styled.img`
-  width: 16px;
-  height: auto;
 `
 
 const formatTokenAmount = (a: number) => {
@@ -46,6 +42,7 @@ const Tokens: React.FC<TokensProps> = ({ tokens }) => {
               gap: '4px',
             }}
           >
+            <Logo srcs={[token.logoUrl]} style={{ width: 16, height: 16, borderRadius: '50%' }} />
             <Text
               as="span"
               sx={{
@@ -56,8 +53,6 @@ const Tokens: React.FC<TokensProps> = ({ tokens }) => {
             >
               {formatTokenAmount(token.amount)}
             </Text>
-
-            <StyledLogo src={token.logoUrl} alt={'token_name'} />
           </Flex>
         )
       })}
@@ -78,8 +73,8 @@ const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
       flexDirection="column"
       sx={{
         gap: '8px',
-        background: theme.buttonBlack,
-        borderRadius: '4px',
+        background: rgba(theme.buttonBlack, 0.9),
+        borderRadius: '12px',
         border: `1px solid ${darken(0.2, theme.border)}`,
       }}
     >
