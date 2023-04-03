@@ -43,7 +43,7 @@ const EarningAreaChart: React.FC<Props> = ({ data, setHoverValue }) => {
             const payload = props.payload as Array<{
               payload: EarningStatsTick
             }>
-            const dataEntry = payload[0]?.payload // they are all the same
+            const dataEntry = payload?.[0]?.payload // they are all the same
 
             if (!dataEntry) {
               return null
