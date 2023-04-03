@@ -26,6 +26,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
 import { useSyncNetworkParamWithStore } from 'hooks/useSyncNetworkParamWithStore'
 import useTheme from 'hooks/useTheme'
+import SignIn from 'pages/Signin'
 import { useHolidayMode } from 'state/user/hooks'
 import DarkModeQueryParamReader from 'theme/DarkModeQueryParamReader'
 import { getLimitOrderContract, isAddressString, shortenAddress } from 'utils'
@@ -208,6 +209,7 @@ export default function App() {
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
+            <SignIn />
             <Suspense fallback={<Loader />}>
               {holidayMode && (
                 <Snowfall
