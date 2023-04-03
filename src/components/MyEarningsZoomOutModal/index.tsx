@@ -1,19 +1,22 @@
 import styled from 'styled-components'
 
 import Modal from 'components/Modal'
-import useGetEarningsOverTime from 'hooks/myEarnings/useGetEarningsOverTime'
 import EarningsPanel from 'pages/MyEarnings/MyEarningsOverTimePanel'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleMyEarningsZoomOutModal } from 'state/application/hooks'
+import { EarningStatsOverTime } from 'types/myEarnings'
 
 const Panel = styled(EarningsPanel)`
   border: none;
 `
 
-const MyEarningsZoomOutModal = () => {
+type Props = {
+  isLoading: boolean
+  data: EarningStatsOverTime | undefined
+}
+const MyEarningsZoomOutModal: React.FC<Props> = ({ data, isLoading }) => {
   const isModalOpen = useModalOpen(ApplicationModal.MY_EARNINGS_ZOOM_OUT)
   const toggleOpenThisModal = useToggleMyEarningsZoomOutModal()
-  const earningsOverTimeState = useGetEarningsOverTime()
 
   return (
     <Modal
@@ -23,7 +26,7 @@ const MyEarningsZoomOutModal = () => {
       width="100%"
       height="100%"
     >
-      <Panel isZoomed isLoading={earningsOverTimeState.isValidating} data={earningsOverTimeState.data} />
+      <Panel isZoomed isLoading={isLoading} data={data} />
     </Modal>
   )
 }

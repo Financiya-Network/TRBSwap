@@ -4,7 +4,7 @@ export const formatUSDValue = (v: number) => {
     currency: 'USD',
     notation: 'compact',
     minimumFractionDigits: 0,
-    maximumSignificantDigits: 2,
+    maximumFractionDigits: 2,
   })
 
   return formatter.format(v)

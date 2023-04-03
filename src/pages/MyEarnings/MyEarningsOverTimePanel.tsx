@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Maximize, Minimize2 } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -11,9 +11,40 @@ import useTheme from 'hooks/useTheme'
 import { useToggleMyEarningsZoomOutModal } from 'state/application/hooks'
 import { TimePeriod } from 'state/myEarnings/reducer'
 import { EarningStatsOverTime } from 'types/myEarnings'
-import { formattedNumLong } from 'utils'
 
 import TimePeriodSelect from './TimePeriodSelect'
+
+const formatValue = (value: number) => {
+  const formatter = Intl.NumberFormat('en-US', {
+    notation: 'standard',
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })
+
+  return formatter.format(value)
+}
+
+const formatPercent = (value: number) => {
+  const formatter = Intl.NumberFormat('en-US', {
+    notation: 'standard',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })
+
+  return formatter.format(value)
+}
+
+const MemoEarningAreaChart = React.memo(EarningAreaChart)
+
+const PercentDiff = styled.div<{ $color?: string }>`
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+
+  color: ${({ theme, $color }) => $color || theme.subText};
+`
 
 const Wrapper = styled.div`
   flex: 1;
@@ -38,7 +69,29 @@ type Props = {
 const MyEarningsOverTimePanel: React.FC<Props> = ({ className, isZoomed = false, isLoading, data }) => {
   const theme = useTheme()
   const [period, setPeriod] = useState<TimePeriod>('1D')
+  const [hoverValue, setHoverValue] = useState<number | null>(null)
   const toggleModal = useToggleMyEarningsZoomOutModal()
+
+  const todayValue = data?.ticks.slice(-1)[0]?.totalValue
+
+  const renderPercentDiff = () => {
+    if (isLoading || !data) {
+      return <PercentDiff>--</PercentDiff>
+    }
+
+    const diffValue = Number(hoverValue) - Number(todayValue)
+    if (Number.isNaN(diffValue)) {
+      return <PercentDiff>--</PercentDiff>
+    }
+
+    const diffPercent = ((hoverValue || todayValue || 0) / data.lastTotalValue - 1) * 100
+
+    return (
+      <PercentDiff $color={diffValue > 0 ? theme.primary : diffValue < 0 ? theme.red : undefined}>
+        {formatValue(diffValue)} ({formatPercent(diffPercent)}%)
+      </PercentDiff>
+    )
+  }
 
   return (
     <Wrapper className={className}>
@@ -63,7 +116,7 @@ const MyEarningsOverTimePanel: React.FC<Props> = ({ className, isZoomed = false,
               color: theme.subText,
             }}
           >
-            <Trans>Earnings ({period})</Trans>
+            <Trans>My Earnings ({period})</Trans>
           </Text>
 
           <Text
@@ -72,11 +125,13 @@ const MyEarningsOverTimePanel: React.FC<Props> = ({ className, isZoomed = false,
               fontSize: '20px',
               lineHeight: '24px',
               marginTop: '8px',
-              marginBottom: '12px',
+              marginBottom: '4px',
             }}
           >
-            {isLoading || !data ? <Loader /> : formattedNumLong(data.totalValue, true)}
+            {isLoading || !data ? <Loader /> : formatValue(hoverValue || todayValue || 0)}
           </Text>
+
+          {renderPercentDiff()}
         </Flex>
 
         <Flex
@@ -97,7 +152,11 @@ const MyEarningsOverTimePanel: React.FC<Props> = ({ className, isZoomed = false,
         </Flex>
       </Flex>
 
-      {isLoading || !data ? <LoaderWithKyberLogo /> : <EarningAreaChart data={data.ticks} />}
+      {isLoading || !data ? (
+        <LoaderWithKyberLogo />
+      ) : (
+        <MemoEarningAreaChart data={data.ticks} setHoverValue={setHoverValue} />
+      )}
     </Wrapper>
   )
 }

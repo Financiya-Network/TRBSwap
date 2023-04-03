@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { NETWORKS_INFO } from 'constants/networks'
 
-type TokenEarning = {
+export type TokenEarning = {
   token: string
   amount: string
   decimals: string

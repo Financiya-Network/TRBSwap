@@ -8,36 +8,18 @@ export type EarningsBreakdown = {
 }
 
 export type EarningStatsOverTime = {
-  totalValue: number
-  ticks: EarningStatsAtTime[]
-}
-
-export type EarningStatsAtTime = {
-  date: string
-  pool: {
-    totalValue: number
-    tokens: Array<{
-      logoUrl: string
-      amount: number
-    }>
-  }
-  farm: {
-    totalValue: number
-    tokens: Array<{
-      logoUrl: string
-      amount: number
-    }>
-  }
+  lastTotalValue: number
+  ticks: EarningStatsTick[]
 }
 
 export type EarningStatsTick = {
   date: string
-  totalValue: string
-  poolRewardsValue: string
-  farmRewardsValue: string
+  totalValue: number
+  poolRewardsValue: number
+  farmRewardsValue: number
   tokens: Array<{
     logoUrl: string
-    amount: string
+    amount: number
     symbol: string
   }>
   hasOtherTokens: boolean

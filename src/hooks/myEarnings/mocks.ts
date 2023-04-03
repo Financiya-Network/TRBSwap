@@ -1,4 +1,4 @@
-import { EarningStatsOverTime, EarningsBreakdown } from 'types/myEarnings'
+import { EarningsBreakdown } from 'types/myEarnings'
 
 import accountJson from './account.json'
 import poolJson from './pool.json'
@@ -34,7 +34,7 @@ export const myTotalEarningsMock: EarningsBreakdown = {
   ],
 }
 
-export const earningsOverTimeMock: EarningStatsOverTime = {
+export const earningsOverTimeMock = {
   totalValue: 123_456.789,
   ticks: Array(7)
     .fill(0)

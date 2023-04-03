@@ -1,6 +1,5 @@
 import { Flex, Text } from 'rebass'
 
-import MyEarningsZoomOutModal from 'components/MyEarningsZoomOutModal'
 import ClassicElasticTab from 'pages/MyEarnings/ClassicElasticTab'
 
 import CurrentChainButton from './CurrentChainButton'
@@ -44,8 +43,6 @@ const MyEarnings = () => {
 
         <ClassicElasticTab />
       </Flex>
-
-      <MyEarningsZoomOutModal />
     </PageWrapper>
   )
 }

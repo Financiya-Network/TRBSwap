@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { darken, rgba } from 'polished'
+import { useEffect } from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import Logo from 'components/Logo'
 import useTheme from 'hooks/useTheme'
-import { EarningStatsAtTime } from 'types/myEarnings'
+import { EarningStatsTick } from 'types/myEarnings'
 import { formattedNumLong } from 'utils'
 
 import { formatUSDValue } from './utilts'
@@ -61,15 +62,20 @@ const Tokens: React.FC<TokensProps> = ({ tokens }) => {
 }
 
 type Props = {
-  dataEntry: EarningStatsAtTime
+  setHoverValue: React.Dispatch<React.SetStateAction<number | null>>
+  dataEntry: EarningStatsTick
 }
-const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
+const TooltipContent: React.FC<Props> = ({ dataEntry, setHoverValue }) => {
   const theme = useTheme()
+
+  useEffect(() => {
+    setHoverValue(dataEntry.totalValue)
+  }, [dataEntry.totalValue, setHoverValue])
 
   return (
     <Flex
       padding="12px"
-      width="200px"
+      width="min-content"
       flexDirection="column"
       sx={{
         gap: '8px',
@@ -87,6 +93,7 @@ const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
       >
         {dataEntry.date}
       </Text>
+
       <Text
         as="span"
         sx={{
@@ -94,10 +101,10 @@ const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
           fontSize: '14px',
           lineHeight: '16px',
           color: theme.text,
+          whiteSpace: 'nowrap',
         }}
       >
-        <Trans>My Total Earnings</Trans>:{' '}
-        <span>{formatUSDValue(dataEntry.pool.totalValue + dataEntry.farm.totalValue)}</span>
+        <Trans>My Total Earnings</Trans>: <span>{formatUSDValue(dataEntry.totalValue)}</span>
       </Text>
 
       <Text
@@ -107,9 +114,10 @@ const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
           fontSize: '14px',
           lineHeight: '16px',
           color: theme.blue,
+          whiteSpace: 'nowrap',
         }}
       >
-        <Trans>Pool Rewards</Trans>: <span>{formatUSDValue(dataEntry.pool.totalValue)}</span>
+        <Trans>Pool Rewards</Trans>: <span>{formatUSDValue(dataEntry.poolRewardsValue)}</span>
       </Text>
 
       <Text
@@ -119,9 +127,10 @@ const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
           fontSize: '14px',
           lineHeight: '16px',
           color: theme.primary,
+          whiteSpace: 'nowrap',
         }}
       >
-        <Trans>Farm Rewards</Trans>: <span>{formatUSDValue(dataEntry.farm.totalValue)}</span>
+        <Trans>Farm Rewards</Trans>: <span>{formatUSDValue(dataEntry.farmRewardsValue)}</span>
       </Text>
 
       <Flex
@@ -132,7 +141,7 @@ const TooltipContent: React.FC<Props> = ({ dataEntry }) => {
         }}
       />
 
-      <Tokens tokens={dataEntry.farm.tokens} />
+      <Tokens tokens={dataEntry.tokens} />
     </Flex>
   )
 }

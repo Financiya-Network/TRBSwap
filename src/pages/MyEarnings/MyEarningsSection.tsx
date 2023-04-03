@@ -1,22 +1,24 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { Flex } from 'rebass'
-import { useGetEarningDataQuery } from 'services/earning'
+import { TokenEarning, useGetEarningDataQuery } from 'services/earning'
 
+import MyEarningsZoomOutModal from 'components/MyEarningsZoomOutModal'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
-import useGetEarningsBreakdown from 'hooks/myEarnings/useGetEarningsBreakdown'
-import useGetEarningsOverTime from 'hooks/myEarnings/useGetEarningsOverTime'
-import { EarningsBreakdown } from 'types/myEarnings'
+import { EarningStatsOverTime, EarningStatsTick, EarningsBreakdown } from 'types/myEarnings'
 import { isAddress } from 'utils'
 
 import EarningsBreakdownPanel from './EarningsBreakdownPanel'
 import MyEarningsOverTimePanel from './MyEarningsOverTimePanel'
 
+const sumTokenEarnings = (earnings: TokenEarning[]) => {
+  return earnings.reduce((sum, tokenEarning) => sum + Number(tokenEarning.amountUSD), 0)
+}
+
 const MyEarningsSection = () => {
   const { chainId, account } = useActiveWeb3React()
-  const earningsBreakdownState = useGetEarningsBreakdown()
-  const earningsOverTimeState = useGetEarningsOverTime()
 
   const getEarningData = useGetEarningDataQuery({
     account: account || '',
@@ -65,7 +67,56 @@ const MyEarningsSection = () => {
     }
   }, [allTokens, chainId, getEarningData?.data])
 
-  console.log({ earningBreakdown })
+  // chop the data into the right duration
+  // format pool value
+  const earningStatsOverTime: EarningStatsOverTime | undefined = useMemo(() => {
+    const data = getEarningData?.data?.['ethereum']?.account
+
+    const ticks: EarningStatsTick[] = (data || [])
+      .slice(0, 30)
+      .reverse()
+      .map(singlePointData => {
+        const poolRewardsValueUSD = sumTokenEarnings(singlePointData.fees || [])
+        const farmRewardsValueUSD = sumTokenEarnings(singlePointData.rewards || [])
+
+        const tokenEarningByAddress: Record<string, any> = {}
+        ;[...(singlePointData.fees || []), ...(singlePointData.rewards || [])].forEach(tokenEarning => {
+          if (!tokenEarningByAddress[tokenEarning.token]) {
+            tokenEarningByAddress[tokenEarning.token] = {
+              logoUrl: '',
+              amount: Number(tokenEarning.amountFloat),
+              symbol: tokenEarning.token.slice(0, 5),
+            }
+          } else {
+            tokenEarningByAddress[tokenEarning.token].amount += Number(tokenEarning.amountFloat)
+          }
+        })
+
+        const tick: EarningStatsTick = {
+          date: dayjs(singlePointData.day * 86400 * 1000).format('MMM DD'),
+          poolRewardsValue: poolRewardsValueUSD,
+          farmRewardsValue: farmRewardsValueUSD,
+          totalValue: poolRewardsValueUSD + farmRewardsValueUSD,
+          tokens: (singlePointData.total || [])
+            .map(tokenEarning => ({
+              logoUrl: '',
+              amount: Number(tokenEarning.amountFloat),
+              symbol: tokenEarning.token.slice(0, 5),
+            }))
+            .sort((tokenEarning1, tokenEarning2) => tokenEarning2.amount - tokenEarning1.amount),
+          hasOtherTokens: (singlePointData.total || []).length > 5,
+        }
+
+        return tick
+      })
+
+    return {
+      lastTotalValue: sumTokenEarnings((data || [])[31]?.total || []),
+      ticks,
+    }
+  }, [getEarningData?.data])
+
+  console.log({ earningBreakdown, earningStatsOverTime })
 
   return (
     <Flex
@@ -73,8 +124,10 @@ const MyEarningsSection = () => {
         gap: '24px',
       }}
     >
-      <EarningsBreakdownPanel isLoading={earningsBreakdownState.isValidating} data={earningBreakdown} />
-      <MyEarningsOverTimePanel isLoading={earningsOverTimeState.isValidating} data={earningsOverTimeState.data} />
+      <EarningsBreakdownPanel isLoading={getEarningData.isLoading} data={earningBreakdown} />
+      <MyEarningsOverTimePanel isLoading={getEarningData.isLoading} data={earningStatsOverTime} />
+
+      <MyEarningsZoomOutModal isLoading={getEarningData.isLoading} data={earningStatsOverTime} />
     </Flex>
   )
 }
