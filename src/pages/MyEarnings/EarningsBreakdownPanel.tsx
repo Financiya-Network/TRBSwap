@@ -39,6 +39,7 @@ type Props = {
 
 const EarningsBreakdownPanel: React.FC<Props> = ({ isLoading, data }) => {
   const theme = useTheme()
+  console.log({ data })
 
   return (
     <Wrapper>

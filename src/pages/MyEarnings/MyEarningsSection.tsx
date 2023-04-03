@@ -27,9 +27,8 @@ const MyEarningsSection = () => {
   const earningBreakdown: EarningsBreakdown | undefined = useMemo(() => {
     const data = getEarningData?.data?.['ethereum']?.account
     console.log({ data })
-    const latestData = getEarningData?.data?.['ethereum']?.account
-      ?.slice(-1)[0]
-      .total?.filter(tokenData => {
+    const latestData = data?.[0].total
+      ?.filter(tokenData => {
         const tokenAddress = isAddress(chainId, tokenData.token)
         if (!tokenAddress) {
           return false
