@@ -64,7 +64,7 @@ const renderTooltip = (props: any) => {
   return <TooltipContent dataEntry={dataEntry} />
 }
 
-const EarningBarChart: React.FC<Props> = ({ data }) => {
+const EarningAreaChart: React.FC<Props> = ({ data }) => {
   const theme = useTheme()
 
   return (
@@ -93,4 +93,4 @@ const EarningBarChart: React.FC<Props> = ({ data }) => {
   )
 }
 
-export default EarningBarChart
+export default EarningAreaChart

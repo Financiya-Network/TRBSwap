@@ -4,7 +4,7 @@ import { Maximize, Minimize2 } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import EarningBarChart from 'components/EarningBarChart'
+import EarningAreaChart from 'components/EarningAreaChart'
 import Loader from 'components/Loader'
 import LoaderWithKyberLogo from 'components/LocalLoader'
 import useTheme from 'hooks/useTheme'
@@ -97,7 +97,7 @@ const MyEarningsOverTimePanel: React.FC<Props> = ({ className, isZoomed = false,
         </Flex>
       </Flex>
 
-      {isLoading || !data ? <LoaderWithKyberLogo /> : <EarningBarChart data={data.ticks} />}
+      {isLoading || !data ? <LoaderWithKyberLogo /> : <EarningAreaChart data={data.ticks} />}
     </Wrapper>
   )
 }
