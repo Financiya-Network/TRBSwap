@@ -1,12 +1,18 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import axios from 'axios'
-import { BuildRoutePayload, BuildRouteResponse } from 'services/route/types/buildRoute'
+import KyberOauth2 from '@kybernetwork/oauth2'
+import type { BaseQueryFn } from '@reduxjs/toolkit/query'
+import { createApi } from '@reduxjs/toolkit/query/react'
+import { BuildRoutePayload } from 'services/route/types/buildRoute'
 
 import { GetRouteParams, GetRouteResponse } from './types/getRoute'
 
+const customBaseQuery =
+  ({ baseUrl }: { baseUrl?: string } = { baseUrl: '' }): BaseQueryFn =>
+  ({ url, params }) =>
+    KyberOauth2.callHttpGet(baseUrl + url, params)
+
 const routeApi = createApi({
   reducerPath: 'routeApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '' }),
+  baseQuery: customBaseQuery(),
   endpoints: builder => ({
     getRoute: builder.query<
       GetRouteResponse,
@@ -24,9 +30,7 @@ const routeApi = createApi({
 })
 
 export const buildRoute = async (url: string, payload: BuildRoutePayload, signal?: AbortSignal) => {
-  const resp = await axios.post<BuildRouteResponse>(url, payload, {
-    signal,
-  })
+  const resp = await KyberOauth2.callHttpPost(url, payload, { signal })
 
   if (resp.status === 200) {
     if (resp.data?.data) {
