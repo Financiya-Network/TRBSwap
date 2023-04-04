@@ -34,8 +34,8 @@ const commonCSS = css`
     grid-template-columns: 112px 100px 64px minmax(auto, 130px) 48px;
   `}
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    column-gap: 16px;
-    grid-template-columns: 156px 64px minmax(auto, 130px) 28px;
+    column-gap: 12px;
+    grid-template-columns: 140px 64px minmax(auto, 130px) 28px;
   `}
 `
 

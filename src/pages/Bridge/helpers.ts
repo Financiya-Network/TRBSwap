@@ -140,7 +140,7 @@ export const formatPoolValue = (amount: PoolBridgeValue) => {
   return '0'
 }
 
-export const formatAmountBridge = (amount: string) => formatNumberWithPrecisionRange(parseFloat(amount ?? '0'), 0, 6)
+export const formatAmountBridge = (amount: string) => formatNumberWithPrecisionRange(parseFloat(amount ?? '0'), 0, 2)
 
 export const getLabelByStatus = (status: MultichainTransferStatus): string => {
   const labelByGeneralStatus: Record<MultichainTransferStatus, string> = {
